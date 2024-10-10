@@ -41,7 +41,7 @@ export interface BookingDetails {
     is_paid: boolean;
     duration: number;
     total_amount: number;
-    started_at: string;
-    ended_at: string;
+    started_at: Date;
+    ended_at: Date;
     office: Office;
 }
