@@ -31,6 +31,12 @@ export default function CheckBooking() {
         console.log("Validating form Data...");
         const validation = viewBookingScheme.safeParse(formData);
 
+        if (!validation.success) {
+            setFormError(validation.error.errors);
+            console.log("Form Data is not valid");
+            return;
+        }
+
         console.log("Form Data is valid, Submiting ...");
         setIsLoading(true);
 
@@ -47,19 +53,13 @@ export default function CheckBooking() {
                 }
             );
 
-            if (!validation.success) {
-                setFormError(validation.error.errors);
-                console.log("Form Data is not valid");
-                return;
-            }
-
             console.log("We are checking your Booking: ", response.data.data);
             setBookingDetails(response.data.data);
         } catch (err: unknown) {
             if (axios.isAxiosError(err)) {
                 console.log("Booking Transaction Error: ", err.message);
                 if (err.response) {
-                    console.log("Server Response: ", err.response.data); // Melihat response error dari server
+                    console.log("Server Response: ", err.response.data);
                 }
                 setError(err.message);
             } else {
@@ -215,7 +215,7 @@ export default function CheckBooking() {
                                             className="w-6 h-6"
                                             alt="icon"
                                         />
-                                        <p className="font-semibold">{bookingDetails.started_at}</p>
+                                        <p className="font-semibold">{bookingDetails.started_at.toDateString()}</p>
                                     </div>
                                 </div>
                                 <div className="flex flex-col gap-2">
@@ -228,7 +228,7 @@ export default function CheckBooking() {
                                             className="w-6 h-6"
                                             alt="icon"
                                         />
-                                        <p className="font-semibold">{bookingDetails.ended_at}</p>
+                                        <p className="font-semibold">{bookingDetails.ended_at.toDateString()}</p>
                                     </div>
                                 </div>
                             </div>

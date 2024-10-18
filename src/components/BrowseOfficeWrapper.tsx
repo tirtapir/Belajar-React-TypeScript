@@ -10,30 +10,36 @@ export function BrowseOfficeWrapper() {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/offices", {
-        headers: {
-          "X-API-KEY": "adkukgi28262eih98209",
-        },
-      })
-      .then((response) => {
+    const fetchOffices = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/offices", {
+          headers: {
+            "X-API-KEY": "adkukgi28262eih98209",
+          },
+        });
         setOffices(response.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+      } catch (err) {
+        // Menangani kesalahan dengan lebih baik
+        setError(err instanceof Error ? err.message : "Unknown error occurred");
+      } finally {
+        setLoading(false); // Pastikan loading di-set ke false setelah mencoba
+      }
+    };
+
+    fetchOffices(); // Memanggil fungsi untuk mendapatkan data
   }, []);
 
+  // Menampilkan loading state
   if (loading) {
     return <p>Loading...</p>;
   }
 
+  // Menampilkan pesan kesalahan
   if (error) {
     return <p>Error loading data: {error}</p>;
   }
 
+  // Menampilkan daftar kantor
   return (
     <section
       id="Fresh-Space"
@@ -47,7 +53,7 @@ export function BrowseOfficeWrapper() {
       <div className="grid grid-cols-3 gap-[30px]">
         {offices.map((office) => (
           <Link key={office.id} to={`/office/${office.slug}`}>
-            <OfficeCard office={office}></OfficeCard>
+            <OfficeCard office={office} />
           </Link>
         ))}
       </div>
