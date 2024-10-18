@@ -15,7 +15,7 @@ describe('BrowseOfficeWrapper', () => {
         <BrowseOfficeWrapper />
       </MemoryRouter>
     );
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
   });
 
   it('renders error message when API call fails', async () => {
