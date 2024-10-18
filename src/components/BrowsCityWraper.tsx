@@ -6,25 +6,26 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 
 export function BrowseCityWraper() {
-    const [cities, setCities] = useState<City[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+  const [cities, setCities] = useState<City[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/cities", {
-        headers: {
-          "X-API-KEY": "adkukgi28262eih98209",
-        },
-      })
-      .then((response) => {
+    const fetchCities = async () => {
+      try {
+        const response = await axios.get("http://localhost:8000/api/cities", {
+          headers: {
+            "X-API-KEY": "adkukgi28262eih98209",
+          },
+        });
         setCities(response.data.data);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : "Unknown error occured");
+      } finally {
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+      }
+    };
+    fetchCities();
   }, []);
 
   if (loading) {
@@ -58,13 +59,15 @@ export function BrowseCityWraper() {
             slidesOffsetAfter={30}
             slidesOffsetBefore={30}
           >
-
             {cities.map((city) => (
-                <SwiperSlide key={city.id} className="!w-fit first-of-type:pl-[calc((100%-1130px-60px)/2)] last-of-type:pr-[calc((100%-1130px-60px)/2)]">
+              <SwiperSlide
+                key={city.id}
+                className="!w-fit first-of-type:pl-[calc((100%-1130px-60px)/2)] last-of-type:pr-[calc((100%-1130px-60px)/2)]"
+              >
                 <Link to={`/city/${city.slug}`}>
-                <CityCard city={city}></CityCard>
+                  <CityCard city={city}></CityCard>
                 </Link>
-                </SwiperSlide>
+              </SwiperSlide>
             ))}
           </Swiper>
         </div>
