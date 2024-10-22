@@ -8,38 +8,50 @@ export function BrowseOfficeWrapper() {
   const [offices, setOffices] = useState<Office[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPage, setTotalPage]  = useState(0);
 
   useEffect(() => {
+    console.log("Current Page:", currentPage);
     const fetchOffices = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/offices", {
+        const response = await axios.get(`http://localhost:8000/api/offices?page=${currentPage}`, {
           headers: {
             "X-API-KEY": "adkukgi28262eih98209",
           },
         });
         setOffices(response.data.data);
+        setTotalPage(response.data.meta.last_page);
       } catch (err) {
-        // Menangani kesalahan dengan lebih baik
         setError(err instanceof Error ? err.message : "Unknown error occurred");
       } finally {
-        setLoading(false); // Pastikan loading di-set ke false setelah mencoba
+        setLoading(false);
       }
     };
 
-    fetchOffices(); // Memanggil fungsi untuk mendapatkan data
-  }, []);
+    fetchOffices();
+  }, [currentPage]);
 
-  // Menampilkan loading state
+  const handleNextpage = () => {
+    if (currentPage < totalPage) {
+      setCurrentPage(currentPage + 1);
+    }
+  }; 
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
   if (loading) {
     return <p>Loading...</p>;
   }
 
-  // Menampilkan pesan kesalahan
   if (error) {
     return <p>Error loading data: {error}</p>;
   }
 
-  // Menampilkan daftar kantor
   return (
     <section
       id="Fresh-Space"
@@ -57,6 +69,26 @@ export function BrowseOfficeWrapper() {
           </Link>
         ))}
       </div>
+
+      <div className="flex justify-center mt-4">
+          <button
+          onClick={handlePrevPage} 
+          disabled={currentPage === 1}
+          className="px-4 py-2 mr-2 bg-green-500 text-black rounded disabled:bg-gray-300 disabled:text-gray-500"
+          > Previous
+          </button>
+          <span className="mx-4">
+          Page {currentPage} of {totalPage}
+        </span>
+      </div>
+
+      <button 
+          onClick={handleNextpage} 
+          disabled={currentPage === totalPage}
+          className="px-4 py-2 mr-2 bg-green-500 text-black rounded disabled:bg-gray-300 disabled:text-gray-500"
+        >
+          Next
+        </button>
     </section>
   );
 }
