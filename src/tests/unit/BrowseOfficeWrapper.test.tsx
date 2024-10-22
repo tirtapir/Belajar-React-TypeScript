@@ -23,13 +23,13 @@ describe('BrowseOfficeWrapper', () => {
     (axios.get as jest.Mock).mockRejectedValueOnce(new Error('Network Error'));
 
     render(
-      <MemoryRouter>
+      <MemoryRouter initialEntries={["/office/test-slug"]}>
         <BrowseOfficeWrapper />
       </MemoryRouter>
     );
     
     await waitFor(() => {
-      expect(screen.getByText(/error loading data: network error/i)).toBeInTheDocument();
+      expect(screen.getByText(/error loading data: Network Error/i)).toBeInTheDocument();
     });
   });
 

@@ -11,23 +11,23 @@ export default function Details() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:8000/api/office/${slug}`, {
+useEffect (() => {
+  const fetchOfficeDetails = async() => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/office/${slug}`, {
         headers: {
           "X-API-KEY": "adkukgi28262eih98209",
         },
-      })
-      .then((response) => {
-        setOffice(response.data.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error(err.response); // Log response dari error
-        setError(err.message);
-        setLoading(false);
-    });
-  }, [slug]);
+      });
+      setOffice(response.data.data);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Unknown error occurred");
+    } finally {
+      setLoading(false)
+    }
+  };
+  fetchOfficeDetails();
+}, [slug]);
 
   if (loading) {
     return <p>Loading...</p>;
@@ -215,7 +215,7 @@ export default function Details() {
               <iframe
                 className="h-full w-full border-0"
                 frameBorder={0}
-                src={`"https://www.google.com/maps/embed/v1/place?q=Graha Pena Building,&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8"`}
+                src={`https://www.google.com/maps/embed/v1/place?q=${office.name},&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8`}
               />
             </div>
             <a
