@@ -74,7 +74,7 @@ export function BrowseOfficeWrapper() {
           <button
           onClick={handlePrevPage} 
           disabled={currentPage === 1}
-          className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black disabled:bg-gray-300 disabled:text-gray-500"
+          className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black font-bold disabled:bg-gray-300 disabled:text-gray-500"
           > Previous
           </button>
           <span className="mx-4">
@@ -83,7 +83,7 @@ export function BrowseOfficeWrapper() {
         <button 
           onClick={handleNextpage} 
           disabled={currentPage === totalPage}
-          className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black disabled:bg-gray-300 disabled:text-gray-500"
+          className="px-7 py-2 mr-2 bg-green-600 rounded-2xl text-black font-bold disabled:bg-gray-300 disabled:text-gray-500"
         >
           Next
         </button>

@@ -158,7 +158,7 @@ export default function CheckBooking() {
           className="flex items-end rounded-[20px] border border-[#E0DEF7] p-[30px] gap-[16px] bg-white"
         >
           <div className="flex flex-col w-full gap-2">
-            <label className="font-semibold">Booking TRX ID</label>
+            <label htmlFor="booking_trx_id" className="font-semibold">Booking TRX ID</label>
             <div className="flex items-center rounded-full border border-[#000929] px-5 gap-[10px] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#0D903A]">
               <img
                 src="/assets/images/icons/receipt-text-black.svg"
@@ -170,7 +170,7 @@ export default function CheckBooking() {
                 name="booking_trx_id"
                 onChange={handleChange}
                 value={formData.booking_trx_id}
-                id="name"
+                id="booking_trx_id"
                 className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#000929]"
                 placeholder="Write your booking trx id"
               />
@@ -184,7 +184,7 @@ export default function CheckBooking() {
             )}
           </div>
           <div className="flex flex-col w-full gap-2">
-            <label className="font-semibold">Phone Number</label>
+            <label htmlFor="phone_number" className="font-semibold">Phone Number</label>
             <div className="flex items-center rounded-full border border-[#000929] px-5 gap-[10px] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#0D903A]">
               <img
                 src="/assets/images/icons/call-black.svg"
@@ -196,7 +196,7 @@ export default function CheckBooking() {
                 name="phone_number"
                 onChange={handleChange}
                 value={formData.phone_number}
-                id="phone"
+                id="phone_number"
                 className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#000929]"
                 placeholder="Write your valid number"
               />
@@ -311,9 +311,9 @@ export default function CheckBooking() {
                         name="started_at"
                         value={
                           editingData?.started_at instanceof Date
-                            ? editingData.started_at.toISOString().slice(0, 16)
+                            ? editingData.started_at.toString()
                             : typeof editingData?.started_at === "string"
-                            ? editingData.started_at.slice(0, 16)
+                            ? editingData.started_at.toString()
                             : ""
                         }
                         onChange={handleEditChange}
@@ -322,11 +322,7 @@ export default function CheckBooking() {
                       />
                     ) : (
                       <p className="font-semibold">
-                        {bookingDetails.started_at instanceof Date
-                          ? bookingDetails.started_at.toLocaleString()
-                          : typeof bookingDetails.started_at === "string"
-                          ? new Date(bookingDetails.started_at).toLocaleString()
-                          : "Invalid date"}
+                        {bookingDetails.started_at.toString()}
                       </p>
                     )}
                   </div>
@@ -390,7 +386,7 @@ export default function CheckBooking() {
                 <div className="flex items-center justify-between">
                   <p className="font-semibold">Total Amount</p>
                   <p className="font-bold text-[22px] leading-[33px] text-[#0D903A]">
-                    {bookingDetails.total_amount.toLocaleString("id-ID")}
+                    {bookingDetails.total_amount.toLocaleString("id-ID") || "N/A"}
                   </p>
                 </div>
               </div>
