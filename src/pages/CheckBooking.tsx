@@ -68,7 +68,6 @@ export default function CheckBooking() {
     setEditingData({ ...bookingDetails });
   };
 
-  // Tambahkan fungsi untuk menangani perubahan input
   const handleEditChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!editingData) return;
     setEditingData({
