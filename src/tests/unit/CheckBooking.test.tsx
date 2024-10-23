@@ -66,31 +66,6 @@ describe("CheckBooking Page", () => {
     });
   });
 
-  // it("should handle errors during form submission", async () => {
-  //   (axios.post as jest.Mock).mockRejectedValueOnce(new Error("Network Error"));
-
-  //   render(
-  //     <MemoryRouter>
-  //       <CheckBooking />
-  //     </MemoryRouter>
-  //   );
-
-  //   fireEvent.change(screen.getByLabelText(/Booking TRX ID/i), {
-  //     target: { value: "OTRX12345" },
-  //   });
-  //   fireEvent.change(screen.getByLabelText(/Phone Number/i), {
-  //     target: { value: "08123456789" },
-  //   });
-
-  //   fireEvent.click(screen.getByRole("button", { name: /check booking/i }));
-
-  //   await waitFor(() => {
-  //     expect(axios.post as jest.Mock).toHaveBeenCalledTimes(1);
-  //     expect(
-  //       screen.getByText(/An unexpected error occurred/i)
-  //     ).toBeInTheDocument();
-  //   });
-  // });
 
   it("should submit forms and fetch booking data details successfully", async () => {
     const baseURL = "http://localhost:8000/storage/";
@@ -261,6 +236,8 @@ describe("CheckBooking Page", () => {
       },
     });
 
+    window.confirm = vi.fn(() => true);
+
     render(
       <MemoryRouter>
         <CheckBooking />
@@ -291,7 +268,6 @@ describe("CheckBooking Page", () => {
       );
     });
 
-    // expect(render(<CheckBooking />)).toMatchSnapshot();
   });
 
 });

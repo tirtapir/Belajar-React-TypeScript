@@ -94,7 +94,7 @@ export default function CheckBooking() {
       setEditingData(null);;
 
       navigate("/");
-      
+
     } catch (error: unknown) {
       if (axios.isAxiosError(error)) {
         setError(error.message);
