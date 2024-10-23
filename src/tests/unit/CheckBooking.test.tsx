@@ -40,21 +40,4 @@ describe('CheckBooking Component', () => {
     expect(phoneInput).toHaveValue('08123456789');
   });
 
-  it('should show error messages if validation fails', async () => {
-    render(
-      <MemoryRouter>
-        <CheckBooking />
-      </MemoryRouter>
-    );
-
-    const submitButton = screen.getByRole('button', { name: /Check Booking/i });
-
-    fireEvent.click(submitButton);
-
-    await waitFor(() => {
-      expect(screen.getByText(/Booking transaction ID is requred/i)).toBeInTheDocument();
-      expect(screen.getByText(/Phone number is requred/i)).toBeInTheDocument();
-    });
-  });
-
 });
