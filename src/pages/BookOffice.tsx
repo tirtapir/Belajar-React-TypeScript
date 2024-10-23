@@ -30,45 +30,46 @@ export default function BookOffice() {
     const [total_amount, settotal_amount] = useState<number>(0);
 
     useEffect(() => {
-        console.log("Fetching office data...");
-        axios
-            .get(`http://localhost:8000/api/office/${slug}`, {
-                headers: {
-                    "X-API-KEY": "adkukgi28262eih98209",
-                },
-            })
-            .then((response) => {
+        const fetchOfficeData = async () => {
+            setLoading(true);
+            try {
+                console.log("Fetching office data...");
+                const response = await axios.get(`http://localhost:8000/api/office/${slug}`, {
+                    headers: {
+                        "X-API-KEY": "adkukgi28262eih98209",
+                    },
+                });
+    
                 console.log("Office data fetched successfully: ", response.data.data);
-
                 setOffice(response.data.data);
-
+    
                 const officeSpaceID = response.data.data.id;
                 const generateUniqueCode = Math.floor(50000 + Math.random() * 10000);
                 const grandTotal = response.data.data.price - generateUniqueCode;
-
+    
                 setUniqueCode(generateUniqueCode);
                 settotal_amount(grandTotal);
-
-            setFormData((prevData) => ({
-                ...prevData,
-                office_space_id: officeSpaceID,
-                total_amount: grandTotal,
-            }));
-
-        setLoading(false);
-    })
-        .catch((err: unknown) => {
-            if (axios.isAxiosError(err)) {
-                console.error(err.response); // Log response dari error
-                setError(err.message);
-            } else {
-                console.error("unexpected error", err);
-                setError("An unexpected error occured");
+    
+                setFormData((prevData) => ({
+                    ...prevData,
+                    office_space_id: officeSpaceID,
+                    total_amount: grandTotal,
+                }));
+            } catch (err) {
+                if (axios.isAxiosError(err)) {
+                    console.error(err.response);
+                    setError(err.message);
+                } else {
+                    console.error("unexpected error", err);
+                    setError("An unexpected error occurred");
+                }
+            } finally {
+                setLoading(false);
             }
-            setLoading(false);
-
-        });
-}, [slug]);
+        };
+    
+        fetchOfficeData();
+    }, [slug]);
 
 if (loading) {
     return <p>Loading...</p>;
@@ -394,7 +395,7 @@ return (
                     disabled={isLoading}
                     className="flex items-center justify-center w-full rounded-full p-[16px_26px] gap-3 bg-[#0D903A] font-bold text-[#F7F7FD]"
                 >
-                    <span>{ isLoading ? "Loading... " : "I've already paid "}</span>
+                    <span>{ isLoading ? "Loading... " : "Book This Office Now"}</span>
                 </button>
             </div>
         </form>
