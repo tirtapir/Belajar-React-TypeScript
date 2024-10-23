@@ -70,25 +70,24 @@ export function BrowseOfficeWrapper() {
         ))}
       </div>
 
-      <div className="flex justify-center mt-4">
+      <div className="flex justify-center mt-4 items-center">
           <button
           onClick={handlePrevPage} 
           disabled={currentPage === 1}
-          className="px-4 py-2 mr-2 bg-green-500 text-black rounded disabled:bg-gray-300 disabled:text-gray-500"
+          className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black disabled:bg-gray-300 disabled:text-gray-500"
           > Previous
           </button>
           <span className="mx-4">
           Page {currentPage} of {totalPage}
         </span>
-      </div>
-
-      <button 
+        <button 
           onClick={handleNextpage} 
           disabled={currentPage === totalPage}
-          className="px-4 py-2 mr-2 bg-green-500 text-black rounded disabled:bg-gray-300 disabled:text-gray-500"
+          className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black disabled:bg-gray-300 disabled:text-gray-500"
         >
           Next
         </button>
+      </div>
     </section>
   );
 }
