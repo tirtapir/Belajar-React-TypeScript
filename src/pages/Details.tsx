@@ -61,7 +61,7 @@ useEffect (() => {
                 <SwiperSlide key={photo.id} className="!w-fit">
                   <div className="w-[700px] h-[550px] overflow-hidden">
                     <img
-                      src={`${baseURL}/${photo .photo}`}
+                      src={`${baseURL}/${photo.photo}`}
                       className="w-full h-full object-cover"
                       alt="thumbnail"
                     />
@@ -204,7 +204,6 @@ useEffect (() => {
           <hr className="border-[#F6F5FD]" />
           <div className="flex flex-col gap-[6px]">
             <h2 className="font-bold">Office Address</h2>
-            <p>{office.name}</p>
             <p>{office.address}</p>
           </div>
           <div className="overflow-hidden w-full h-[280px]">

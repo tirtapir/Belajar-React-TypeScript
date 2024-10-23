@@ -8,11 +8,8 @@ import { vi, describe, it, expect } from "vitest";
 vi.mock("axios");
 
 describe("Office Space details page", () => {
-
   const mockOfficeData = {
-    data: {
-      data: {
-        id: 1,
+    id: 1,
     price: 15000000,
     duration: 30,
     name: "Nusa Dua Workspace",
@@ -38,87 +35,72 @@ describe("Office Space details page", () => {
     ],
     about: "This is an awesome office space.",
     address: "1234 Street, Nusa Dua, Bali",
-      }
-    }
   };
 
-  it("display loading state initially", () => {
-    render(
-      <MemoryRouter initialEntries={[`/office/${mockOfficeData.data.data.name}`]}>
-        <Details />
-      </MemoryRouter>
-    );
-    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
-  });
-
-  it("renders error message when API call fails", async () => {
-    (axios.get as jest.Mock).mockRejectedValue(new Error("Network Error"));
-    render(
-      <MemoryRouter initialEntries={[`/office/${mockOfficeData.data.data.name}`]}>
-        <Details />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => {
-      expect(
-        screen.getByText(/error loading data: network error/i)).toBeInTheDocument();
-    });
-  });
-
-  it('renders "office not found" if there is no office data', async () => {
-    (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: null } });
-    render(
-      <MemoryRouter initialEntries={["/office/{nusa-dua-workspace}"]}>
-        <Details />
-      </MemoryRouter>
-    );
-
-    await waitFor(() => {
-      expect(screen.getByText(/office not found/i)).toBeInTheDocument();
-    });
-  });
-
-  // it("renders office's data when API Call successfully gets  data", async () => {
-  //   (axios.get as jest.Mock).mockResolvedValueOnce({
-  //     data: { data: mockOfficeData },
-  //   });
+  // it("display loading state initially", () => {
   //   render(
-  //   <MemoryRouter initialEntries={[`/office/${mockOfficeData.data.data.name}`]}>
+  //     <MemoryRouter
+  //       initialEntries={[`/office/${mockOfficeData.name}`]}
+  //     >
+  //       <Details />
+  //     </MemoryRouter>
+  //   );
+  //   expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+  // });
+
+  // it("renders error message when API call fails", async () => {
+  //   (axios.get as jest.Mock).mockRejectedValue(new Error("Unknown error occurred"));
+  //   render(
+  //     <MemoryRouter
+  //       initialEntries={[`/office/${mockOfficeData.name}`]}
+  //     >
   //       <Details />
   //     </MemoryRouter>
   //   );
 
   //   await waitFor(() => {
-  //     // mockOfficeData.photos.forEach((photo) => {
-  //     //   expect(screen.getByText(photo.photo)).toBeInTheDocument();
-  //     // });
-  //     expect(screen.getByText(mockOfficeData.data.data.name)).toBeInTheDocument();
-  //     expect(screen.getByText(mockOfficeData.data.data.city.name)).toBeInTheDocument();
-  //     expect(screen.getByText(mockOfficeData.data.data.address)).toBeInTheDocument();
   //     expect(
-  //       screen.getByText(mockOfficeData.data.data.price.toLocaleString("id"))
+  //       screen.getByText(/error loading data: unknown error occurred/i)
   //     ).toBeInTheDocument();
-  //     mockOfficeData.data.data.benefits.forEach((benefit) => {
-  //       expect(screen.getByText(benefit.name)).toBeInTheDocument();
-  //     });
   //   });
   // });
 
-  // it("renders office's data when API Call successfully gets data", async () => {
-  //   (axios.get as jest.Mock).mockResolvedValueOnce(mockOfficeData);
+  // it('renders "office not found" if there is no office data', async () => {
+  //   (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: null } });
   //   render(
-  //     <MemoryRouter initialEntries={[`/office/${mockOfficeData.data.data.name}`]}>
+  //     <MemoryRouter initialEntries={[`/office/${mockOfficeData.name}`]}>
   //       <Details />
   //     </MemoryRouter>
   //   );
-  
+
   //   await waitFor(() => {
-  //     // expect(screen.getByText(mockOfficeData.name)).toBeInTheDocument();
-  //     expect(screen.getByText(/Nusa Dua Workspace/i)).toBeInTheDocument();
-  //   expect(screen.getByText(/Bali/i)).toBeInTheDocument();
-  //   expect(screen.getByText(/This is a workspace in Nusa Dua./i)).toBeInTheDocument();
-  //   expect(screen.getByText(/1,500,000/i)).toBeInTheDocument(); // Price formatted
+  //     expect(screen.getByText(/office not found/i)).toBeInTheDocument();
   //   });
   // });
 
+  it("renders office's data when API Call successfully gets data", async () => {
+    (axios.get as jest.Mock).mockResolvedValueOnce({
+      data: { data: mockOfficeData },
+    });
+    render(
+      <MemoryRouter initialEntries={[`/office/${mockOfficeData.name}`]}>
+        <Details />
+      </MemoryRouter>
+    );
+  
+    await waitFor(() => {
+      const images = screen.getAllByAltText("thumbnail");
+        expect(images.length).toBe(mockOfficeData.photos.length);
+      mockOfficeData.photos.forEach((photo, index) => {
+        expect(images[index]).toHaveAttribute('src', expect.stringContaining(photo.photo));
+    });
+      expect(screen.getByText(mockOfficeData.name)).toBeInTheDocument();
+      expect(screen.getByText(mockOfficeData.city.name)).toBeInTheDocument();
+      expect(screen.getByText(mockOfficeData.address)).toBeInTheDocument();
+      expect(screen.getByText(mockOfficeData.price.toLocaleString("id"))).toBeInTheDocument();
+      mockOfficeData.benefits.forEach((benefit) => {
+        expect(screen.getByText(benefit.name)).toBeInTheDocument();
+      });
+    });
+  });
 });

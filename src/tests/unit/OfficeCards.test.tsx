@@ -5,8 +5,6 @@ import OfficeCard from "../../components/OfficeCard";
 import { Office } from "../../types/type";
 
 
-//create dummy data
-
 const office: Office = {
     id : 1,
     price : 15000000,
