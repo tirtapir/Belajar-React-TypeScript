@@ -57,10 +57,8 @@ describe("CheckBooking Page", () => {
     fireEvent.click(SubmitButton);
 
     await waitFor(() => {
-      expect(
-        screen.getByTestId(test_ids.invalidTrxID)
-      ).toBeInTheDocument();
-      expect(screen.getByText(/Phone number is requred/i)).toBeInTheDocument();
+      expect(screen.getByTestId(test_ids.invalidTrxID)).toBeInTheDocument();
+      expect(screen.getByTestId(test_ids.invalidPhoneNumber)).toBeInTheDocument();
     });
   });
 

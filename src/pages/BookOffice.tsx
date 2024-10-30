@@ -14,6 +14,11 @@ export const test_ids = {
     dateInput : "date",
     duration : "duration",
     bookButton : "bookButton",
+    loadingState : "loadingState",
+    errorLoading : "errorLoading",
+    nameRequired : "nameRequired",
+    phoneNumberRequired : "PhoneNumberRequired",
+    dateRequired : "dateRequired",
 }
 
 export default function BookOffice() {
@@ -83,11 +88,11 @@ export default function BookOffice() {
     }, [slug]);
 
 if (loading) {
-    return <p>Loading...</p>;
+    return <p data-testid={test_ids.loadingState} >Loading...</p>;
 }
 
 if (error) {
-    return <p>Error loading data: {error}</p>;
+    return <p data-testid={test_ids.errorLoading}>Error loading data: {error}</p>;
 }
 
 if (!office) {
@@ -116,7 +121,6 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         return;
     }
 
-    console.log("Form Data is valid. Submiting...", formData);
     console.log("FormData yang dikirim: ", formData);
 
 
@@ -227,7 +231,7 @@ return (
                                 placeholder="Write your complete name"
                             />
                             {formError.find((err) => err.path.includes ("name"))?.message && (
-                                <p className="text-[#FF2D2D] font-semibold">Name is requred</p>
+                                <p data-testid={test_ids.nameRequired} className="text-[#FF2D2D] font-semibold">Name is required</p>
                             )}
                         </div>
                     </div>
@@ -252,7 +256,7 @@ return (
                                 placeholder="Write your valid number"
                             />
                             {formError.find((err) => err.path.includes ("phone_number")) && (
-                                <p className="text-[#FF2D2D] font-semibold">Phone number is requred</p>
+                                <p data-testid={test_ids.phoneNumberRequired} className="text-[#FF2D2D] font-semibold">Phone number is required</p>
                             )}
                         </div>
                     </div>
@@ -276,7 +280,7 @@ return (
                                 className="relative appearance-none outline-none w-full py-3 font-semibold [&::-webkit-calendar-picker-indicator]:absolute [&::-webkit-calendar-picker-indicator]:w-full [&::-webkit-calendar-picker-indicator]:h-full [&::-webkit-calendar-picker-indicator]:opacity-0"
                             />
                             {formError.find((err) => err.path.includes ("started_at")) && (
-                            <p className="text-[#FF2D2D] font-semibold">started_at is requred</p>
+                            <p data-testid={test_ids.dateRequired} className="text-[#FF2D2D] font-semibold">Date to book is required</p>
                             )}
                         </div>
                     </div>
@@ -406,6 +410,7 @@ return (
                 </div>
                 <hr className="border-[#F6F5FD]" />
                 <button
+                    data-testid={test_ids.bookButton}
                     type="submit"
                     disabled={isLoading}
                     className="flex items-center justify-center w-full rounded-full p-[16px_26px] gap-3 bg-[#0D903A] font-bold text-[#F7F7FD]"

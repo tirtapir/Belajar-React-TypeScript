@@ -9,13 +9,17 @@ import '@testing-library/jest-dom';
 vi.mock("axios");
 
 const mockOfficeData = {
+  data: {
     id: 1,
-    name: "Test Office",
-    city: { name: "Test City" },
-    price: 1000000,
+    name: 'Test Office',
+    price: 7000000,
+    thumbnail: 'thumbnail.png',
+    city: { name: 'Test City' },
     duration: 7,
-    thumbnail: "thumbnail.jpg",
+  },
 };
+
+const baseURL = "http://localhost:8000/storage";
 
 describe('BookOffice Page', () => {
     beforeEach(() => {
@@ -28,11 +32,12 @@ describe('BookOffice Page', () => {
             <BookOffice />
           </MemoryRouter>
         );
-        expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+        const loadingState = (screen.getByTestId(test_ids.loadingState));
+        expect(loadingState).toBeInTheDocument();
+        expect(loadingState).toHaveTextContent('Loading...');
       });
     
       it('fetches office data and displays it correctly', async () => {
-        const baseURL = "http://localhost:8000/storage/";
     
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: mockOfficeData.data } });
     
@@ -47,11 +52,36 @@ describe('BookOffice Page', () => {
             test_ids.thumbnail
           ) as HTMLImageElement;
           expect(thumbnailElement).toBeInTheDocument();
-          expect(thumbnailElement.src).toContain(`${baseURL}/thumbnail.jpg`);
-          expect(screen.getByText('Test Office')).toBeInTheDocument();
-          expect(screen.getByText('Test City')).toBeInTheDocument();
-          expect(screen.getByText(/7 Days Working/)).toBeInTheDocument();
+          expect(thumbnailElement.src).toContain(`${baseURL}/thumbnail.png`);
+
+          expect(screen.getByTestId(test_ids.officeName)).toHaveTextContent('Test Office');
+          expect(screen.getByTestId(test_ids.cityName)).toHaveTextContent('Test City');
+          
+          expect(screen.getByTestId(test_ids.duration)).toHaveTextContent('7 Days Working');
         });
+      });
+
+      it('handles input changes for form inputs correctly', async () => {
+        
+        (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: mockOfficeData.data } });
+        
+        render(
+          <MemoryRouter>
+            <BookOffice />
+          </MemoryRouter>
+        );
+
+          const  nameInput = await screen.findByTestId(test_ids.nameInput);
+          const  phoneInput = await screen.findByTestId(test_ids.phoneInput);
+          const  startedAtInput = await screen.findByTestId(test_ids.dateInput);
+
+          fireEvent.change(nameInput, { target: { value: 'John Doe' }});
+          fireEvent.change(phoneInput, { target: { value: '08123456789' }});
+          fireEvent.change(startedAtInput, { target: { value: '2023-10-01' }});
+
+          expect(nameInput).toHaveValue('John Doe');
+          expect(phoneInput).toHaveValue('08123456789');
+          expect(startedAtInput).toHaveValue('2023-10-01');
       });
 
       it('displays error message when API request fails', async () => {
@@ -64,22 +94,13 @@ describe('BookOffice Page', () => {
         );
     
         await waitFor(() => {
-          expect(screen.getByText(/Error loading data/i)).toBeInTheDocument();
+          const errorLoadingState = screen.getByTestId(test_ids.errorLoading);
+          expect(errorLoadingState).toBeInTheDocument();
+          expect(errorLoadingState).toHaveTextContent('Error loading data');
         });
       });
 
-
         it('validates form inputs and shows error messages when validation fails', async () => {
-        const mockOfficeData = {
-          data: {
-            id: 1,
-            name: 'Test Office',
-            price: 100000,
-            thumbnail: 'thumbnail.png',
-            city: { name: 'Test City' },
-            duration: 5,
-          },
-        };
     
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: mockOfficeData.data } });
     
@@ -90,27 +111,34 @@ describe('BookOffice Page', () => {
         );
     
         await waitFor(() => {
-          expect(screen.getByText('Test Office')).toBeInTheDocument();
+          const thumbnailElement = screen.getByTestId(
+            test_ids.thumbnail
+          ) as HTMLImageElement;
+          expect(thumbnailElement).toBeInTheDocument();
+          expect(thumbnailElement.src).toContain(`${baseURL}/thumbnail.png`);
+
+          expect(screen.getByTestId(test_ids.officeName)).toHaveTextContent('Test Office');
+          expect(screen.getByTestId(test_ids.cityName)).toHaveTextContent('Test City');
+          
+          expect(screen.getByTestId(test_ids.duration)).toHaveTextContent('7 Days Working');
         });
     
-        fireEvent.click(screen.getByRole('button', { name: /Book This Office Now/i }));
-    
-        expect(screen.getByText('Name is requred')).toBeInTheDocument();
-        expect(screen.getByText('Phone number is requred')).toBeInTheDocument();
-        expect(screen.getByText('started_at is requred')).toBeInTheDocument();
+        fireEvent.click(screen.getByTestId(test_ids.bookButton));
+        
+        const nameElement = screen.getByTestId(test_ids.nameRequired);
+        expect(nameElement).toBeInTheDocument();
+        expect(nameElement).toHaveTextContent("Name is required");
+
+        const phoneElement = screen.getByTestId(test_ids.phoneNumberRequired);
+        expect(phoneElement).toBeInTheDocument();
+        expect(phoneElement).toHaveTextContent("Phone number is required");
+
+        const dateElement = screen.getByTestId(test_ids.dateRequired);
+        expect(dateElement).toBeInTheDocument();
+        expect(dateElement).toHaveTextContent("Date to book is required");
       });
 
     it('submits form data successfully after validation passes', async () => {
-        const mockOfficeData = {
-          data: {
-            id: 1,
-            name: 'Test Office',
-            price: 100000,
-            thumbnail: 'thumbnail.png',
-            city: { name: 'Test City' },
-            duration: 5,
-          },
-        };
     
         (axios.get as jest.Mock).mockResolvedValueOnce({ data: { data: mockOfficeData.data } });
     
@@ -127,21 +155,19 @@ describe('BookOffice Page', () => {
         );
     
         await waitFor(() => {
-          expect(screen.getByText('Test Office')).toBeInTheDocument();
+          expect(screen.getByTestId(test_ids.officeName)).toBeInTheDocument();
         });
     
-        // Fill form inputs
-        fireEvent.change(screen.getByPlaceholderText(/Write your complete name/i), {
-          target: { value: 'John Doe' },
-        });
-        fireEvent.change(screen.getByPlaceholderText(/Write your valid number/i), {
-          target: { value: '08123456789' },
-        });
-        fireEvent.change(screen.getByLabelText(/Started At/i), {
-          target: { value: '2023-10-01' },
-        });
+        const  nameInput = await screen.findByTestId(test_ids.nameInput);
+        const  phoneInput = await screen.findByTestId(test_ids.phoneInput);
+        const  startedAtInput = await screen.findByTestId(test_ids.dateInput);
+
+        fireEvent.change(nameInput, { target: { value: 'John Doe' }});
+        fireEvent.change(phoneInput, { target: { value: '08123456789' }});
+        fireEvent.change(startedAtInput, { target: { value: '2023-10-01' }});
+
     
-        fireEvent.click(screen.getByRole('button', { name: /Book This Office Now/i }));
+        fireEvent.click(screen.getByTestId(test_ids.bookButton));
     
         await waitFor(() => {
           expect((axios.post as jest.Mock)).toHaveBeenCalledWith(
@@ -155,7 +181,5 @@ describe('BookOffice Page', () => {
             { headers: { 'X-API-KEY': 'adkukgi28262eih98209' } }
           );
         });
-    
-        expect(screen.getByText('Test Office')).toBeInTheDocument();
       });
 });

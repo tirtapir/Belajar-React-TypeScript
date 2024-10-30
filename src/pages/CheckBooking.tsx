@@ -27,6 +27,7 @@ export const test_ids = {
   nameInput: "nameInput",
   saveButton: "saveButton",
   invalidTrxID: "Booking transaction ID is requred",
+  invalidPhoneNumber: "Phone number is requred",
 };
 
 export default function CheckBooking() {
@@ -227,7 +228,7 @@ export default function CheckBooking() {
               />
             </div>
             {formError.find((error) => error.path.includes("phone_number")) && (
-              <p className="text-[#FF2D2D] font-semibold">
+              <p data-testid={test_ids.invalidPhoneNumber} className="text-[#FF2D2D] font-semibold">
                 Phone number is requred
               </p>
             )}
