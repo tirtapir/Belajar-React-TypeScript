@@ -5,6 +5,12 @@ import { City } from "../types/type";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
+export const test_ids = {
+  loading: "loading",
+  error: "error",
+  onClickCity: "onClickCity",
+};
+
 export function BrowseCityWraper() {
   const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(true);
@@ -29,11 +35,11 @@ export function BrowseCityWraper() {
   }, []);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p data-testid={test_ids.loading}>Loading...</p>;
   }
 
   if (error) {
-    return <p>Error loading data: {error}</p>;
+    return <p data-testid={test_ids.error}>Error loading data: {error}</p>;
   }
 
   return (
@@ -43,10 +49,7 @@ export function BrowseCityWraper() {
           You Can Choose <br />
           Our Favorite Cities
         </h2>
-        <a
-          href="#"
-          className="rounded-full rounded-full py-3 px-5 bg-white font-bold"
-        >
+        <a href="#" className="rounded-full py-3 px-5 bg-white font-bold">
           Explore All City
         </a>
       </div>
@@ -64,7 +67,10 @@ export function BrowseCityWraper() {
                 key={city.id}
                 className="!w-fit first-of-type:pl-[calc((100%-1130px-60px)/2)] last-of-type:pr-[calc((100%-1130px-60px)/2)]"
               >
-                <Link to={`/city/${city.slug}`}>
+                <Link
+                  data-testid={test_ids.onClickCity}
+                  to={`/city/${city.slug}`}
+                >
                   <CityCard city={city}></CityCard>
                 </Link>
               </SwiperSlide>
