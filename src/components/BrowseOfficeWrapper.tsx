@@ -4,6 +4,13 @@ import axios from "axios";
 import { Office } from "../types/type";
 import { Link } from "react-router-dom";
 
+export const test_ids = {
+  loading: "loading",
+  error: "error",
+  nextButton: "nextButton",
+  prevButton: "prevButton",
+};
+
 export function BrowseOfficeWrapper() {
   const [offices, setOffices] = useState<Office[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,11 +52,11 @@ export function BrowseOfficeWrapper() {
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p data-testid={test_ids.loading}>Loading...</p>;
   }
 
   if (error) {
-    return <p>Error loading data: {error}</p>;
+    return <p data-testid={test_ids.error}>Error loading data: {error}</p>;
   }
 
   return (
@@ -72,6 +79,7 @@ export function BrowseOfficeWrapper() {
 
       <div className="flex justify-center mt-4 items-center">
           <button
+          data-testid={test_ids.prevButton}
           onClick={handlePrevPage} 
           disabled={currentPage === 1}
           className="px-4 py-2 mr-2 bg-green-600 rounded-2xl text-black font-bold disabled:bg-gray-300 disabled:text-gray-500"
@@ -81,6 +89,7 @@ export function BrowseOfficeWrapper() {
           Page {currentPage} of {totalPage}
         </span>
         <button 
+          data-testid={test_ids.nextButton}
           onClick={handleNextpage} 
           disabled={currentPage === totalPage}
           className="px-7 py-2 mr-2 bg-green-600 rounded-2xl text-black font-bold disabled:bg-gray-300 disabled:text-gray-500"

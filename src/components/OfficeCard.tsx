@@ -1,22 +1,33 @@
 import { Office } from "../types/type";
 
+export const test_ids = {
+  officeCard : "officeCard",
+  thumbnail: "thumbnail",
+  officeName: "officeName",
+  duration: "duration",
+  price: "price",
+  city: "city",
+  slug : "slug"
+}
+
 export default function OfficeCard({office}: OfficeCardProps) {
     const baseURL = "http://localhost:8000/storage";
   return (
-    <div className="card">
+    <div data-testid={test_ids.officeCard} className="card">
       <div className="flex flex-col rounded-[20px] border border-[#E0DEF7] bg-white overflow-hidden">
         <div className="thumbnail-container relative w-full h-[200px]">
           <p className="absolute top-5 left-5 w-fit rounded-full p-[6px_16px] bg-[#0D903A] font-bold text-sm leading-[21px] text-[#F7F7FD]">
             Popular
           </p>
           <img
+            data-testid={test_ids.thumbnail}
             src={`${baseURL}/${office.thumbnail}`}
             className="w-full h-full object-cover"
             alt="thumbnails"
           />
         </div>
         <div className="card-detail-container flex flex-col p-5 pb-[30px] gap-4">
-          <h3 className="line-clamp-2 font-bold text-[22px] leading-[36px] h-[72px]">
+          <h3 data-testid={test_ids.officeName} className="line-clamp-2 font-bold text-[22px] leading-[36px] h-[72px]">
             {office.name}
           </h3>
           <div className="flex items-center justify-between">

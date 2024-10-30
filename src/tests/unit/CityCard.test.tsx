@@ -4,7 +4,6 @@ import { describe, expect, it } from "vitest";
 import CityCard from "../../components/CityCard";
 import { City } from "../../types/type";
 
-// crate data dummy
 
 const city: City = {
   id: 1,
