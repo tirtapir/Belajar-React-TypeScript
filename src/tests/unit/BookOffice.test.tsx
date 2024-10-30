@@ -1,6 +1,6 @@
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import BookOffice from "../../pages/BookOffice";
-import { MemoryRouter, useParams } from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 import { test_ids } from "../../pages/BookOffice";
 import axios from 'axios';
 import { describe, it, expect, vi, beforeEach } from "vitest";

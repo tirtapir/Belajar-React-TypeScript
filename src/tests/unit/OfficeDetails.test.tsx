@@ -4,6 +4,7 @@ import "@testing-library/jest-dom";
 import axios from "axios";
 import { MemoryRouter } from "react-router-dom";
 import { vi, describe, it, expect } from "vitest";
+import { test_ids } from "../../pages/Details";
 
 vi.mock("axios");
 
@@ -39,29 +40,29 @@ describe("Office Space details page", () => {
 
   it("display loading state initially", () => {
     render(
-      <MemoryRouter
-        initialEntries={[`/office/${mockOfficeData.name}`]}
-      >
+      <MemoryRouter initialEntries={[`/office/${mockOfficeData.name}`]}>
         <Details />
       </MemoryRouter>
     );
-    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+    expect(screen.getByTestId(test_ids.loadingState)).toBeInTheDocument();
   });
 
   it("renders error message when API call fails", async () => {
-    (axios.get as jest.Mock).mockRejectedValue(new Error("Unknown error occurred"));
+    (axios.get as jest.Mock).mockRejectedValue(
+      new Error("Unknown error occurred")
+    );
     render(
-      <MemoryRouter
-        initialEntries={[`/office/${mockOfficeData.name}`]}
-      >
+      <MemoryRouter initialEntries={[`/office/${mockOfficeData.name}`]}>
         <Details />
       </MemoryRouter>
     );
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/error loading data: unknown error occurred/i)
-      ).toBeInTheDocument();
+      const errorLoadingState = screen.getByTestId(test_ids.errorLoadingState);
+      expect(errorLoadingState).toBeInTheDocument();
+      expect(errorLoadingState).toHaveTextContent(
+        "Error loading data: Unknown error occurred"
+      );
     });
   });
 
@@ -74,7 +75,7 @@ describe("Office Space details page", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText(/office not found/i)).toBeInTheDocument();
+      expect(screen.getByTestId(test_ids.dataNotFound)).toBeInTheDocument();
     });
   });
 
@@ -87,20 +88,38 @@ describe("Office Space details page", () => {
         <Details />
       </MemoryRouter>
     );
-  
+
     await waitFor(() => {
-      const images = screen.getAllByAltText("thumbnail");
-        expect(images.length).toBe(mockOfficeData.photos.length);
+      const photos = screen.getAllByTestId(test_ids.photo);
+      expect(photos.length).toBe(mockOfficeData.photos.length);
       mockOfficeData.photos.forEach((photo, index) => {
-        expect(images[index]).toHaveAttribute('src', expect.stringContaining(photo.photo));
-    });
-      expect(screen.getByText(mockOfficeData.name)).toBeInTheDocument();
-      expect(screen.getByText(mockOfficeData.city.name)).toBeInTheDocument();
-      expect(screen.getByText(mockOfficeData.address)).toBeInTheDocument();
-      expect(screen.getByText(mockOfficeData.price.toLocaleString("id"))).toBeInTheDocument();
-      mockOfficeData.benefits.forEach((benefit) => {
-        expect(screen.getByText(benefit.name)).toBeInTheDocument();
+        expect(photos[index]).toHaveAttribute(
+          "src",
+          expect.stringContaining(photo.photo)
+          );
       });
+
+      const officeName = screen.getByTestId(test_ids.officeName);
+      expect(officeName).toHaveTextContent(mockOfficeData.name);
+
+      const cityName = screen.getByTestId(test_ids.cityName);
+      expect(cityName).toHaveTextContent(mockOfficeData.city.name);
+
+      const about = screen.getByTestId(test_ids.about);
+      expect(about).toHaveTextContent(mockOfficeData.about);
+
+      const address = screen.getByTestId(test_ids.address);
+      expect(address).toHaveTextContent(mockOfficeData.address);
+
+      const price = screen.getByTestId(test_ids.price);
+      expect(price).toHaveTextContent(mockOfficeData.price.toLocaleString("id"));
+
+      const benefits = screen.getAllByTestId(test_ids.benefits);
+      expect(benefits.length).toBe(mockOfficeData.benefits.length);
+      mockOfficeData.benefits.forEach((benefit, index) => {
+        expect(benefits[index]).toHaveTextContent(benefit.name);
+      })      
     });
+    
   });
 });

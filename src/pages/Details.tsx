@@ -5,6 +5,21 @@ import axios from "axios";
 import { Link, useParams } from "react-router-dom";
 import { Office } from "../types/type";
 
+export const test_ids = {
+  loadingState: 'loadingState',
+  errorLoadingState : 'errorLoadingState',
+  dataNotFound: 'dataNotFound',
+  photo: 'photo',
+  officeName: 'officeName',
+  cityName: 'cityName',
+  about : 'about',
+  address : 'address',
+  price : 'price',
+  duration: 'duration',
+  benefits: 'benefits',
+};
+
+
 export default function Details() {
   const { slug } = useParams<{ slug: string }>();
   const [office, setOffice] = useState<Office | null>(null);
@@ -30,15 +45,15 @@ useEffect (() => {
 }, [slug]);
 
   if (loading) {
-    return <p>Loading...</p>;
+    return <p data-testid={test_ids.loadingState} >Loading...</p>;
   }
 
   if (error) {
-    return <p>Error loading data: {error}</p>;
+    return <p data-testid={test_ids.errorLoadingState} >Error loading data: {error}</p>;
   }
 
   if (!office) {
-    return <p>Office not found</p>;
+    return <p data-testid={test_ids.dataNotFound} >Office not found</p>;
   }
 
   const baseURL = "http://localhost:8000/storage";
@@ -61,6 +76,7 @@ useEffect (() => {
                 <SwiperSlide key={photo.id} className="!w-fit">
                   <div className="w-[700px] h-[550px] overflow-hidden">
                     <img
+                      data-testid={test_ids.photo}
                       src={`${baseURL}/${photo.photo}`}
                       className="w-full h-full object-cover"
                       alt="thumbnail"
@@ -83,7 +99,7 @@ useEffect (() => {
           </p>
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="font-extrabold text-[32px] leading-[44px]">
+              <h1 data-testid={test_ids.officeName} className="font-extrabold text-[32px] leading-[44px]">
                 {office.name}
               </h1>
               <div className="flex items-center gap-[6px] mt-[10px]">
@@ -92,7 +108,7 @@ useEffect (() => {
                   className="w-6 h-6"
                   alt="icon"
                 />
-                <p className="font-semibold">{office.city.name}</p>
+                <p data-testid={test_ids.cityName} className="font-semibold">{office.city.name}</p>
               </div>
             </div>
             <div className="flex flex-col gap-[6px]">
@@ -126,7 +142,7 @@ useEffect (() => {
               <p className="font-semibold text-right">4.5/5 (19,384)</p>
             </div>
           </div>
-          <p className="leading-[30px]">
+          <p data-testid={test_ids.about} className="leading-[30px]">
             {office.about}
           </p>
           <hr className="border-[#F6F5FD]" />
@@ -204,7 +220,7 @@ useEffect (() => {
           <hr className="border-[#F6F5FD]" />
           <div className="flex flex-col gap-[6px]">
             <h2 className="font-bold">Office Address</h2>
-            <p>{office.address}</p>
+            <p data-testid={test_ids.address}>{office.address}</p>
           </div>
           <div className="overflow-hidden w-full h-[280px]">
             <div
@@ -229,7 +245,7 @@ useEffect (() => {
         <div className="w-[392px] flex flex-col shrink-0 gap-[30px]">
           <div className="flex flex-col rounded-[20px] border border-[#E0DEF7] p-[30px] gap-[30px] bg-white">
             <div>
-              <p className="font-extrabold text-[32px] leading-[48px] text-[#0D903A]">
+              <p data-testid={test_ids.price} className="font-extrabold text-[32px] leading-[48px] text-[#0D903A]">
                 {office.price.toLocaleString("id")}
               </p>
               <p className="font-semibold mt-1">{`"For ${office.duration} days working"`}</p>
@@ -243,7 +259,7 @@ useEffect (() => {
                   className="w-[30px] h-[30px]"
                   alt="icon"
                 />
-                <p className="font-semibold leading-[28px]">
+                <p data-testid={test_ids.benefits} className="font-semibold leading-[28px]">
                   {benefit.name}
                 </p>
               </div>
