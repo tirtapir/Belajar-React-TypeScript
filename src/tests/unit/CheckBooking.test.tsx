@@ -1,10 +1,10 @@
-import { render, screen, waitFor, fireEvent, getByPlaceholderText } from "@testing-library/react";
+import { render, screen, waitFor, fireEvent } from "@testing-library/react";
 import axios from "axios";
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { test_ids } from "../../pages/CheckBooking";
 import "@testing-library/jest-dom";
 import { MemoryRouter } from "react-router-dom";
 import CheckBooking from "../../pages/CheckBooking";
-import { aw } from "vitest/dist/chunks/reporters.C4ZHgdxQ.js";
 
 vi.mock("axios");
 
@@ -21,10 +21,10 @@ describe("CheckBooking Page", () => {
     );
 
     expect(
-      screen.getByPlaceholderText(/write your booking trx id/i)
+      screen.getByTestId(test_ids.trxIdLabel)
     ).toBeInTheDocument();
     expect(
-      screen.getByPlaceholderText(/write your valid number/i)
+      screen.getByTestId(test_ids.phoneNumberLabel)
     ).toBeInTheDocument();
   });
 
@@ -35,17 +35,15 @@ describe("CheckBooking Page", () => {
       </MemoryRouter>
     );
 
-    const trxIdInput = screen.getByPlaceholderText(
-      /write your booking trx id/i
-    );
-    const phoneInput = screen.getByPlaceholderText(/write your valid number/i);
+    const trxIdInput = screen.getByTestId(test_ids.trxIdInput);
+    const phoneInput = screen.getByTestId(test_ids.phoneInput);
 
     fireEvent.change(trxIdInput, { target: { value: "OTRX12345" } });
     fireEvent.change(phoneInput, { target: { value: "08123456789" } });
 
     expect(trxIdInput).toHaveValue("OTRX12345");
     expect(phoneInput).toHaveValue("08123456789");
-  });
+});
 
   it("should show error message when validation is fails", async () => {
     render(
@@ -54,13 +52,13 @@ describe("CheckBooking Page", () => {
       </MemoryRouter>
     );
 
-    const SubmitButton = screen.getByRole("button", { name: /check booking/i });
+    const SubmitButton = screen.getByTestId(test_ids.checkBookingButton);
 
     fireEvent.click(SubmitButton);
 
     await waitFor(() => {
       expect(
-        screen.getByText(/Booking transaction ID is requred/i)
+        screen.getByTestId(test_ids.invalidTrxID)
       ).toBeInTheDocument();
       expect(screen.getByText(/Phone number is requred/i)).toBeInTheDocument();
     });
@@ -96,61 +94,56 @@ describe("CheckBooking Page", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(screen.getByLabelText(/Booking TRX ID/i), {
+    fireEvent.change(screen.getByTestId(test_ids.trxIdInput), {
       target: { value: "OTRX12345" },
     });
-    fireEvent.change(screen.getByLabelText(/Phone Number/i), {
+    fireEvent.change(screen.getByTestId(test_ids.phoneInput), {
       target: { value: "08123456789" },
     });
 
-    fireEvent.click(screen.getByRole("button", { name: /check booking/i }));
+    fireEvent.click(screen.getByTestId(test_ids.checkBookingButton));
 
     await waitFor(() => {
-      const thumbnailElement = screen.getByAltText(
-        "thumbnail"
+      const thumbnailElement = screen.getByTestId(
+        test_ids.thumbnail
       ) as HTMLImageElement;
       expect(thumbnailElement).toBeInTheDocument();
       expect(thumbnailElement.src).toContain(`${baseURL}/thumbnail.jpg`);
 
-      const officeNameElement = screen.getByText((content) =>
-        content.includes("Test Office")
-      );
+      const officeNameElement = screen.getByTestId(test_ids.officeName);
       expect(officeNameElement).toBeInTheDocument();
+      expect(officeNameElement).toHaveTextContent("Test Office");
 
-      const cityNameElement = screen.getByText((content) =>
-        content.includes("Test City")
-      );
-      expect(cityNameElement).toBeInTheDocument();
+      const officeCityNameElement = screen.getByTestId(test_ids.cityName);
+      expect(officeCityNameElement).toBeInTheDocument();
+      expect(officeCityNameElement).toHaveTextContent("Test City");
 
-      const nameElement = screen.getByText((content) =>
-        content.includes("John Doe")
-      );
+      const nameElement = screen.getByTestId(test_ids.fullName);
       expect(nameElement).toBeInTheDocument();
+      expect(nameElement).toHaveTextContent("John Doe");
 
-      const phoneNumberElement = screen.getByText((content) =>
-        content.includes("08123456789")
-      );
+      const phoneNumberElement = screen.getByTestId(test_ids.phoneNumber);
       expect(phoneNumberElement).toBeInTheDocument();
 
-      const startedAtElement = screen.getByText((content) =>
-        content.includes("2023-10-01")
-      );
+      const startedAtElement = screen.getByTestId(test_ids.startedAt);
       expect(startedAtElement).toBeInTheDocument();
+      expect(startedAtElement).toHaveTextContent("2023-10-01");
 
-      const endedAtElement = screen.getByText((content) =>
-        content.includes("2023-10-15")
-      );
+      const endedAtElement = screen.getByTestId(test_ids.endedAt);
       expect(endedAtElement).toBeInTheDocument();
+      expect(endedAtElement).toHaveTextContent("2023-10-15");
 
-      const durationElement = screen.getByText((content) =>
-        content.includes("7 Days Working")
-      );
+      const durationElement = screen.getByTestId(test_ids.duration);
       expect(durationElement).toBeInTheDocument();
-
-      const totalAmountElement = screen.getByText((content) =>
-        content.includes("7.000.000")
-      );
+      expect(durationElement).toHaveTextContent("7 Days Working");
+      
+      const totalAmountElement = screen.getByTestId(test_ids.totalAmount);
       expect(totalAmountElement).toBeInTheDocument();
+      expect(totalAmountElement).toHaveTextContent("7.000.000");
+
+      const isPaidElement = screen.getByTestId(test_ids.isPaid);
+      expect(isPaidElement).toBeInTheDocument();
+      expect(isPaidElement).toHaveTextContent("PENDING");
 
     });
   });
@@ -182,25 +175,28 @@ describe("CheckBooking Page", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(screen.getByLabelText(/Booking TRX ID/i), { target: { value: 'OTRX1234' } });
-    fireEvent.change(screen.getByLabelText(/Phone Number/i), { target: { value: '08123456789' } });
+    fireEvent.change(screen.getByTestId(test_ids.trxIdInput), {
+      target: { value: "OTRX12345" },
+    });
+    fireEvent.change(screen.getByTestId(test_ids.phoneInput), {
+      target: { value: "08123456789" },
+    });
 
-    fireEvent.click(screen.getByRole('button', { name: /Check Booking/i }));
+    fireEvent.click(screen.getByTestId(test_ids.checkBookingButton));
 
     await waitFor(() => {
 
-      let nameElement = screen.getByText((content) =>
-        content.includes("John Doe")
-      );
+      const nameElement = screen.getByTestId(test_ids.fullName);
       expect(nameElement).toBeInTheDocument();
+      expect(nameElement).toHaveTextContent("John Doe");
 
-      fireEvent.click(screen.getByRole('button', { name: /Edit Booking Details/i }));
+      fireEvent.click(screen.getByTestId(test_ids.editButton));
 
       fireEvent.click(nameElement);
 
-      const nameInput = screen.getByPlaceholderText(/Write your full name/i);
+      const nameInput = screen.getByTestId(test_ids.nameInput);
       fireEvent.change(nameInput, { target: { value: 'Jane Doe' } });
-      fireEvent.click(screen.getByRole('button', { name: /Save Changes/i }));
+      fireEvent.click(screen.getByTestId(test_ids.saveButton));
     });
 
     await waitFor(() => {
@@ -244,19 +240,22 @@ describe("CheckBooking Page", () => {
       </MemoryRouter>
     );
 
-    fireEvent.change(screen.getByLabelText(/Booking TRX ID/i), { target: { value: '123456' } });
-    fireEvent.change(screen.getByLabelText(/Phone Number/i), { target: { value: '08123456789' } });
-
-    fireEvent.click(screen.getByRole('button', { name: /Check Booking/i }));
-
-    await waitFor(() => {
-      const nameElement = screen.getByText((content) =>
-        content.includes("John Doe")
-        );
-      expect(nameElement).toBeInTheDocument();
+    fireEvent.change(screen.getByTestId(test_ids.trxIdInput), {
+      target: { value: "OTRX12345" },
+    });
+    fireEvent.change(screen.getByTestId(test_ids.phoneInput), {
+      target: { value: "08123456789" },
     });
 
-    fireEvent.click(screen.getByRole('button', { name: /Cancel Booking/i }));
+    fireEvent.click(screen.getByTestId(test_ids.checkBookingButton));
+
+    await waitFor(() => {
+      const nameElement = screen.getByTestId(test_ids.fullName);
+      expect(nameElement).toBeInTheDocument();
+      expect(nameElement).toHaveTextContent("John Doe");
+    });
+
+    fireEvent.click(screen.getByTestId(test_ids.cancelButton));
 
     (axios.delete as jest.Mock).mockResolvedValueOnce({});
 

@@ -6,6 +6,29 @@ import axios from "axios";
 import { viewBookingScheme } from "../types/validationBooking";
 import { useNavigate } from 'react-router-dom';
 
+export const test_ids = {
+  trxIdInput: "trxIdInput", 
+  phoneInput: "phoneInput",
+  trxIdLabel: "trxIdLabel",
+  phoneNumberLabel: "phoneNumberLabel",
+  checkBookingButton: "checkBookingButton",
+  thumbnail: "thumbnail",
+  officeName: "officeName",
+  cityName: "cityName",
+  fullName: "fullName",
+  phoneNumber: "phoneNumber",
+  startedAt: "startedAt",
+  endedAt: "endedAt",
+  duration: "duration",
+  totalAmount: "totalAmount",
+  isPaid: "isPaid",
+  editButton: "editButton",
+  cancelButton: "cancelButton",
+  nameInput: "nameInput",
+  saveButton: "saveButton",
+  invalidTrxID: "Booking transaction ID is requred",
+};
+
 export default function CheckBooking() {
   const [formData, setFormData] = useState({
     booking_trx_id: "",
@@ -91,7 +114,7 @@ export default function CheckBooking() {
       );
       setBookingDetails(response.data.data);
       setIsEditing(false);
-      setEditingData(null);;
+      setEditingData(null);
 
       navigate("/");
 
@@ -150,7 +173,7 @@ export default function CheckBooking() {
         />
       </div>
       <section
-        id=" Check-Booking"
+        id="Check-Booking"
         className="relative flex flex-col w-[930px] shrink-0 gap-[30px] mx-auto mb-[100px] z-20"
       >
         <form
@@ -158,7 +181,7 @@ export default function CheckBooking() {
           className="flex items-end rounded-[20px] border border-[#E0DEF7] p-[30px] gap-[16px] bg-white"
         >
           <div className="flex flex-col w-full gap-2">
-            <label htmlFor="booking_trx_id" className="font-semibold">Booking TRX ID</label>
+            <label htmlFor="booking_trx_id" data-testid={test_ids.trxIdLabel} className="font-semibold">Booking TRX ID</label>
             <div className="flex items-center rounded-full border border-[#000929] px-5 gap-[10px] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#0D903A]">
               <img
                 src="/assets/images/icons/receipt-text-black.svg"
@@ -171,6 +194,7 @@ export default function CheckBooking() {
                 onChange={handleChange}
                 value={formData.booking_trx_id}
                 id="booking_trx_id"
+                data-testid={test_ids.trxIdInput}
                 className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#000929]"
                 placeholder="Write your booking trx id"
               />
@@ -178,13 +202,13 @@ export default function CheckBooking() {
             {formError.find((error) =>
               error.path.includes("booking_trx_id")
             ) && (
-              <p className="text-[#FF2D2D] font-semibold">
+              <p data-testid={test_ids.invalidTrxID} className="text-[#FF2D2D] font-semibold">
                 Booking transaction ID is requred
               </p>
             )}
           </div>
           <div className="flex flex-col w-full gap-2">
-            <label htmlFor="phone_number" className="font-semibold">Phone Number</label>
+            <label htmlFor="phone_number" data-testid={test_ids.phoneNumberLabel} className="font-semibold">Phone Number</label>
             <div className="flex items-center rounded-full border border-[#000929] px-5 gap-[10px] transition-all duration-300 focus-within:ring-2 focus-within:ring-[#0D903A]">
               <img
                 src="/assets/images/icons/call-black.svg"
@@ -196,6 +220,7 @@ export default function CheckBooking() {
                 name="phone_number"
                 onChange={handleChange}
                 value={formData.phone_number}
+                data-testid={test_ids.phoneInput}
                 id="phone_number"
                 className="appearance-none outline-none w-full py-3 font-semibold placeholder:font-normal placeholder:text-[#000929]"
                 placeholder="Write your valid number"
@@ -208,6 +233,7 @@ export default function CheckBooking() {
             )}
           </div>
           <button
+            data-testid={test_ids.checkBookingButton}
             disabled={isLoading}
             type="submit"
             className="flex items-center justify-center rounded-full p-[12px_30px] gap-3 bg-[#0D903A] font-bold text-[#F7F7FD]"
@@ -224,13 +250,14 @@ export default function CheckBooking() {
               <div className="flex items-center gap-4">
                 <div className="flex shrink-0 w-[140px] h-[100px] rounded-[20px] overflow-hidden">
                   <img
+                    data-testid={test_ids.thumbnail}
                     src={`${baseURL}/${bookingDetails?.office?.thumbnail}`}
                     className="w-full h-full object-cover"
                     alt="thumbnail"
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <p className="font-bold text-xl leading-[30px]">
+                  <p data-testid={test_ids.officeName} className="font-bold text-xl leading-[30px]">
                     {bookingDetails.office.name}
                   </p>
                   <div className="flex items-center gap-[6px]">
@@ -239,7 +266,7 @@ export default function CheckBooking() {
                       className="w-6 h-6"
                       alt="icon"
                     />
-                    <p className="font-semibold">
+                    <p data-testid={test_ids.cityName} className="font-semibold">
                       {bookingDetails.office.city.name}
                     </p>
                   </div>
@@ -259,6 +286,7 @@ export default function CheckBooking() {
                     />
                     {isEditing ? (
                       <input
+                        data-testid={test_ids.nameInput}
                         type="text"
                         name="name"
                         value={editingData?.name || ""}
@@ -267,7 +295,7 @@ export default function CheckBooking() {
                         placeholder="Write your full name"
                       />
                     ) : (
-                      <p className="font-semibold">{bookingDetails.name}</p>
+                      <p data-testid={test_ids.fullName} className="font-semibold">{bookingDetails.name}</p>
                     )}
                   </div>
                 </div>
@@ -290,7 +318,7 @@ export default function CheckBooking() {
                         placeholder="Write your valid number"
                       />
                     ) : (
-                      <p className="font-semibold">
+                      <p data-testid={test_ids.phoneNumber} className="font-semibold">
                         {bookingDetails.phone_number}
                       </p>
                     )}
@@ -321,7 +349,7 @@ export default function CheckBooking() {
                         placeholder="Write your valid number"
                       />
                     ) : (
-                      <p className="font-semibold">
+                      <p data-testid={test_ids.startedAt} className="font-semibold">
                         {bookingDetails.started_at.toString()}
                       </p>
                     )}
@@ -335,7 +363,7 @@ export default function CheckBooking() {
                       className="w-6 h-6"
                       alt="icon"
                     />
-                    <p className="font-semibold">
+                    <p data-testid={test_ids.endedAt} className="font-semibold">
                       {bookingDetails.ended_at.toString()}
                     </p>
                   </div>
@@ -356,7 +384,7 @@ export default function CheckBooking() {
             <div className="flex flex-col h-fit shrink-0 rounded-[20px] border border-[#E0DEF7] p-[30px] gap-[30px] bg-white">
               <h2 className="font-bold">Order Details</h2>
 
-              <div className="flex flex-col gap-5">
+              <div data-testid={test_ids.isPaid} className="flex flex-col gap-5">
                 {bookingDetails.is_paid ? (
                   <div className="flex items-center justify-between">
                     <p className="font-semibold">Status Pembayaran</p>
@@ -379,13 +407,13 @@ export default function CheckBooking() {
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="font-semibold">Duration</p>
-                  <p className="font-bold">
+                  <p data-testid={test_ids.duration} className="font-bold">
                     {bookingDetails.duration} Days Working
                   </p>
                 </div>
                 <div className="flex items-center justify-between">
                   <p className="font-semibold">Total Amount</p>
-                  <p className="font-bold text-[22px] leading-[33px] text-[#0D903A]">
+                  <p data-testid={test_ids.totalAmount} className="font-bold text-[22px] leading-[33px] text-[#0D903A]">
                     {bookingDetails.total_amount.toLocaleString("id-ID") || "N/A"}
                   </p>
                 </div>
@@ -431,6 +459,7 @@ export default function CheckBooking() {
               </a>
               <div className="flex flex-col w-full gap-2">
                 <button
+                  data-testid={test_ids.editButton}
                   onClick={handleUpdate}
                   disabled={isLoading}
                   type="button"
@@ -443,6 +472,7 @@ export default function CheckBooking() {
 
                 {isEditing && (
                   <button
+                    data-testid={test_ids.saveButton}
                     onClick={handleSaveUpdate}
                     disabled={isLoading}
                     type="button"
@@ -455,6 +485,7 @@ export default function CheckBooking() {
                 )}
 
                 <button
+                  data-testid={test_ids.cancelButton}
                   onClick={handleDelete}
                   disabled={isLoading}
                   type="button"

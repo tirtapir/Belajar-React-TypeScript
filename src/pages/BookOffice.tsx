@@ -5,6 +5,17 @@ import z from "zod";
 import { Office } from "../types/type";
 import { bookingSchema } from "../types/validationBooking";
 
+export const test_ids = {
+    thumbnail : "thumbnail",
+    officeName : "officeName",
+    cityName : "cityName",
+    nameInput : "name",
+    phoneInput : "phone",
+    dateInput : "date",
+    duration : "duration",
+    bookButton : "bookButton",
+}
+
 export default function BookOffice() {
 
     const { slug } = useParams<{ slug: string }>();
@@ -136,7 +147,7 @@ const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         if (axios.isAxiosError(err)) {
             console.log("Booking Transaction Error: ", err.message);
             if (err.response) {
-                console.log("Server Response: ", err.response.data); // Melihat response error dari server
+                console.log("Server Response: ", err.response.data);
             }
             setError(err.message);
         } else {
@@ -172,13 +183,14 @@ return (
                 <div className="flex items-center gap-4">
                     <div className="flex shrink-0 w-[140px] h-[100px] rounded-[20px] overflow-hidden">
                         <img
+                            data-testid={test_ids.thumbnail}
                             src={`${baseURL}/${office.thumbnail}`}
                             className="w-full h-full object-cover"
                             alt="thumbnail"
                         />
                     </div>
                     <div className="flex flex-col gap-2">
-                        <p className="font-bold text-xl leading-[30px]">
+                        <p data-testid={test_ids.officeName} className="font-bold text-xl leading-[30px]">
                             {office.name}
                         </p>
                         <div className="flex items-center gap-[6px]">
@@ -187,7 +199,7 @@ return (
                                 className="w-6 h-6"
                                 alt="icon"
                             />
-                            <p className="font-semibold">{office.city.name}</p>
+                            <p data-testid={test_ids.cityName} className="font-semibold">{office.city.name}</p>
                         </div>
                     </div>
                 </div>
@@ -205,6 +217,7 @@ return (
                                 alt="icon"
                             />
                             <input
+                                data-testid = {test_ids.nameInput}
                                 type="text"
                                 name="name"
                                 value={formData.name}
@@ -229,6 +242,7 @@ return (
                                 alt="icon"
                             />
                             <input
+                                data-testid = {test_ids.phoneInput}
                                 type="tel"
                                 name="phone_number"
                                 value={formData.phone_number}
@@ -253,6 +267,7 @@ return (
                                 alt="icon"
                             />
                             <input
+                                data-testid = {test_ids.dateInput}
                                 type="date"
                                 name="started_at"
                                 value={formData.started_at}
@@ -314,7 +329,7 @@ return (
                 <div className="flex flex-col gap-5">
                     <div className="flex items-center justify-between">
                         <p className="font-semibold">Duration</p>
-                        <p className="font-bold">{office.duration} Days Working</p>
+                        <p data-testid={test_ids.duration} className="font-bold">{office.duration} Days Working</p>
                     </div>
                     <div className="flex items-center justify-between">
                         <p className="font-semibold">Sub Total</p>
