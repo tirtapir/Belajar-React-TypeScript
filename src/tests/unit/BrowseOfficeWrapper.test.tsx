@@ -6,8 +6,6 @@ import '@testing-library/jest-dom';
 import { MemoryRouter } from 'react-router-dom';
 import { test_ids } from '../../components/BrowseOfficeWrapper';
 import { test_ids as officeCard_test_id } from '../../components/OfficeCard';
-import { a } from "vitest/dist/chunks/suite.BMWOKiTe.js";
-import { aw } from "vitest/dist/chunks/reporters.C4ZHgdxQ.js";
 
 vi.mock('axios');
 

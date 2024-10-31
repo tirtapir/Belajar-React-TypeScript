@@ -3,7 +3,7 @@ import "@testing-library/jest-dom";
 import { describe, expect, it } from "vitest";
 import CityCard from "../../components/CityCard";
 import { City } from "../../types/type";
-
+import { MemoryRouter } from "react-router-dom";
 
 const city: City = {
   id: 1,
@@ -16,19 +16,31 @@ const city: City = {
 
 describe("CityCard Component", () => {
   it("renders city name", () => {
-    render(<CityCard city={city} />);
+    render(
+      <MemoryRouter>
+        <CityCard city={city} />
+      </MemoryRouter>
+    );
     const cityName = screen.getByText(/jakarta/i);
     expect(cityName).toBeInTheDocument();
   });
 
   it("renders offices count in the city", () => {
-    render(<CityCard city={city} />);
+    render(
+      <MemoryRouter>
+        <CityCard city={city} />
+      </MemoryRouter>
+    );
     const officesCount = screen.getByText(/3 Offices/i);
     expect(officesCount).toBeInTheDocument();
   });
 
   it("renders city photo with correct src and alt attributes", () => {
-    render(<CityCard city={city} />);
+    render(
+      <MemoryRouter>
+        <CityCard city={city} />
+      </MemoryRouter>
+    );
     const cityPhoto = screen.getByAltText(/thumbnails/i);
     expect(cityPhoto).toBeInTheDocument();
     expect(cityPhoto).toHaveAttribute(
@@ -38,7 +50,11 @@ describe("CityCard Component", () => {
   });
 
   it("has the correct class names for layout", () => {
-    render(<CityCard city={city} />);
+    render(
+      <MemoryRouter>
+        <CityCard city={city} />
+      </MemoryRouter>
+    );
     const cardElement = screen
       .getByRole("img", { name: /thumbnails/i })
       .closest("div");
